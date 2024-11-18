@@ -15,12 +15,13 @@ const axiosInstance = axios.create({
 });
 
 // Function to fetch recipes
-const fetchRecipes = async (query) => {
+const fetchRecipes = async (query, offset = 0) => {
     try {
         const response = await axiosInstance.get('/complexSearch', {
             params: {
                 query,
                 number: 10,
+                offset,
             },
         });
         return response.data;
@@ -36,7 +37,7 @@ const fetchRecipeDetails = async (recipeId) => {
         const response = await axiosInstance.get(`/${recipeId}/information`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching recipe details:', error);
+        console.error('Error fetching recipe details:', error)
         throw error;
     }
 };
@@ -46,7 +47,7 @@ const fetchRecipeNutrition = async (recipeId) => {
         const response = await axiosInstance.get(`/${recipeId}/nutritionWidget.json`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching recipe nutrition:', error);
+        console.error('Error fetching recipe nutrition:', error)
         throw error;
     }
 }
