@@ -1,0 +1,17 @@
+{
+    "extends": ["airbnb", "prettier", "eslint:recommended", "plugin:react/recommended"],
+    "plugins": ["prettier", "react", "import"],
+    "settings": {
+        "react": {
+        "version": "detect"
+        }
+    },
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "import/no-named-as-default": "off",
+        "import/no-named-as-default-member": "off",
+        "import/no-extraneous-dependencies": "off"
+    }
+      
+}
+  
