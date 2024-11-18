@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import SearchInput from '../components/SearchInput/SearchInput'
-import fetchRecipes from '../services/api'
+import RecipeCard from '../components/RecipeCard/RecipeCard'
+import { fetchRecipes } from '../services/api'
+import '../styles/HomePage.css'
 
 function HomePage() {
     const [searchQuery, setSearchQuery] = useState('')
@@ -14,22 +16,27 @@ function HomePage() {
 
     const handleSearch = (query) => {
         setSearchQuery(query)
-        refetch()
     }
 
+    useEffect(() => {
+        if (searchQuery) {
+            refetch()
+        }
+    }, [searchQuery, refetch])
+
     return (
-        <div>
+        <div className='homepage'>
             <h1>Recipe Search</h1>
             <SearchInput onSearch={handleSearch} />
 
             {isLoading && <p>Loading Recipes...</p>}
             {error && <p>Error fetching recipes. Try again</p>}
             {data && (
-                <ul>
+                <div className='recipe-grid'>
                     {data.results.map((recipe) => (
-                        <li key={recipe.id}>{recipe.title}</li>
+                        <RecipeCard key={recipe.id} recipe={recipe} />
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     )
