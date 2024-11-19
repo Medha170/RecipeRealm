@@ -1,6 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 import { fetchRecipeDetails, fetchRecipeNutrition } from '../services/api'
 import '../styles/RecipeDetailsPage.css'
 
@@ -40,12 +42,12 @@ function RecipeDetailsPage() {
                     </ul>
 
                     <h2>Instructions</h2>
-                    <div dangerouslySetInnerHTML={{ __html: data.instructions || `<p>No instructions available</p>` }} />
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>{data.instructions}</ReactMarkdown>
 
                     {nutritionData && (
                         <>
                             <h2>Nutrition</h2>
-                            <p>Calories: {nutritionData.calories}</p>
+                            <p>Calories: {nutritionData.calories} cal</p>
                             <p>Protein: {nutritionData.protein}</p>
                             <p>Fat: {nutritionData.fat}</p>
                             <p>Carbs: {nutritionData.carbs}</p>
