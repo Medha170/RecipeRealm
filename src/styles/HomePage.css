@@ -20,3 +20,11 @@
     font-size: 1.2rem;
     color: #555;
 }
+
+.message {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin: 15px 0;
+}
+
