@@ -25,7 +25,7 @@ function HomePage() {
         isFetchingNextPage,
     } = useInfiniteQuery({
         queryKey: ['recipes', searchQuery, filters],
-        queryFn: ({ pageParam = 0 }) => fetchRecipes(searchQuery, pageParam, filters.cuisine, filters.diet, filters.sort),
+        queryFn: ({ pageParam = 0 }) => fetchRecipes(searchQuery, pageParam, filters.cuisine, filters.diet, filters.sort, filters.excludeIngredients),
         getNextPageParam: (lastPage, pages) => (lastPage.results.length ? pages.length * 10 : undefined),
         enabled: isSearchEnabled,
     })

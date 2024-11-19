@@ -35,6 +35,13 @@ function FilterSort({ onFilterChange }) {
                 <option value="time">Preparation Time</option>
                 {/* Add more sorting options if needed */}
             </select>
+
+            <input
+                type="text"
+                name="excludeIngredients"
+                placeholder="Exclude Ingredients (comma-separated)"
+                onChange={handleFilterChange}
+            />
         </div>
     )
 }

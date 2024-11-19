@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
 });
 
 // Function to fetch recipes
-const fetchRecipes = async (query = '', offset = 0, cuisine = '', diet = '', sort = 'popularity') => {
+const fetchRecipes = async (query = '', offset = 0, cuisine = '', diet = '', sort = 'popularity', excludeIngredients = '') => {
     try {
         const params = {
             apiKey: API_KEY,
@@ -24,6 +24,7 @@ const fetchRecipes = async (query = '', offset = 0, cuisine = '', diet = '', sor
             cuisine,
             diet,
             sort,
+            excludeIngredients,
         };
         
         if (query) {
@@ -31,7 +32,8 @@ const fetchRecipes = async (query = '', offset = 0, cuisine = '', diet = '', sor
         } else {
             params.sort = sort; // Use 'popularity' by default if no query
         }
-        
+
+        console.log('Fetching recipes with params:', params);
         const response = await axiosInstance.get('/complexSearch', { params });
         return response.data;
     } catch (error) {
