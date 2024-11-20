@@ -78,6 +78,7 @@ function HomePage() {
             <FilterSort onFilterChange={handleFilterChange} />
             <Link to="/favourites">View Favourites</Link>
             <Link to="/meal-plan">View Meal Plan</Link>
+            <Link to="/collections">View Collections</Link>
 
             {message && <p className="message">{message}</p>}
 

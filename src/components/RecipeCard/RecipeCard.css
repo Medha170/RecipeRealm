@@ -21,4 +21,17 @@
     font-size: 1rem;
     margin: 10px;
   }
-  
+
+  .remove-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.remove-button:hover {
+    background-color: #d32f2f;
+} 
