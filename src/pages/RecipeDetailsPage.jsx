@@ -1,32 +1,53 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import ReactMarkdown from 'react-markdown'
-import rehypeRaw from 'rehype-raw'
-import { fetchRecipeDetails, fetchRecipeNutrition } from '../services/api'
-import '../styles/RecipeDetailsPage.css'
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import { fetchRecipeDetails, fetchRecipeNutrition } from '../services/api';
+import '../styles/RecipeDetailsPage.css';
 
 function RecipeDetailsPage() {
-    const { recipeId } = useParams()
+    const { recipeId } = useParams();
     const { data, error, isLoading } = useQuery({
         queryKey: ['recipe', recipeId],
         queryFn: () => fetchRecipeDetails(recipeId),
-    })
+    });
 
     const { data: nutritionData, error: nutritionError, isLoading: nutritionLoading } = useQuery({
         queryKey: ['nutrition', recipeId],
         queryFn: () => fetchRecipeNutrition(recipeId),
-    })
+    });
+
+    const [note, setNote] = useState('');
+    const [savedNotes, setSavedNotes] = useState({});
+
+    useEffect(() => {
+        const storedNotes = JSON.parse(localStorage.getItem('notes')) || {};
+        setSavedNotes(storedNotes);
+
+        // Set the current note for this recipe
+        setNote(storedNotes[recipeId] || '');
+    }, [recipeId]);
+
+    const handleNoteChange = (e) => {
+        setNote(e.target.value);
+    };
+
+    const handleSaveNote = () => {
+        const updatedNotes = { ...savedNotes, [recipeId]: note };
+        setSavedNotes(updatedNotes);
+        localStorage.setItem('notes', JSON.stringify(updatedNotes));
+    };
 
     if (isLoading || nutritionLoading) {
-        return <p>Loading Recipe Details...</p>
+        return <p>Loading Recipe Details...</p>;
     }
     if (error || nutritionError) {
-        return <p>Error fetching recipe details. Try again</p>
+        return <p>Error fetching recipe details. Try again</p>;
     }
 
     return (
-        <div className='recipe-details'>
+        <div className="recipe-details">
             {data && (
                 <>
                     <h1>{data.title}</h1>
@@ -53,10 +74,20 @@ function RecipeDetailsPage() {
                             <p>Carbs: {nutritionData.carbs}</p>
                         </>
                     )}
+
+                    <div className="notes-section">
+                        <h2>Personal Notes</h2>
+                        <textarea
+                            value={note}
+                            onChange={handleNoteChange}
+                            placeholder="Add your personal notes here..."
+                        />
+                        <button type='button' onClick={handleSaveNote}>Save Note</button>
+                    </div>
                 </>
             )}
         </div>
-    )
+    );
 }
 
-export default RecipeDetailsPage
+export default RecipeDetailsPage;
