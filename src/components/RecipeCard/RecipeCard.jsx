@@ -3,26 +3,32 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 
-function RecipeCard({ 
-    recipe, 
-    onToggleFavorite, 
-    onMealPlanAction, 
-    isInMealPlan, 
-    onRemoveFromCollection, 
-    showAddToCollection 
+function RecipeCard({
+    recipe,
+    onToggleFavorite,
+    onMealPlanAction,
+    isInMealPlan,
+    onRemoveFromCollection,
+    showAddToCollection,
 }) {
     const [isFavorite, setIsFavorite] = useState(false);
     const [collections, setCollections] = useState([]);
     const [selectedCollection, setSelectedCollection] = useState('');
     const [showNewCollectionModal, setShowNewCollectionModal] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState('');
+    const [rating, setRating] = useState(0); // Store rating for the recipe
+    const [hoveredRating, setHoveredRating] = useState(0); // Track hovered star
 
     useEffect(() => {
         const favoriteRecipes = JSON.parse(localStorage.getItem('favourites')) || [];
-        setIsFavorite(favoriteRecipes.some(fav => fav.id === recipe.id));
+        setIsFavorite(favoriteRecipes.some((fav) => fav.id === recipe.id));
 
         const savedCollections = JSON.parse(localStorage.getItem('collections')) || [];
         setCollections(savedCollections);
+
+        // Load saved rating from localStorage
+        const savedRatings = JSON.parse(localStorage.getItem('ratings')) || {};
+        setRating(savedRatings[recipe.id] || 0);
     }, [recipe.id]);
 
     const handleFavoriteClick = () => {
@@ -53,15 +59,38 @@ function RecipeCard({
         }
     };
 
+    // Handle rating change
+    const handleRatingClick = (newRating) => {
+        setRating(newRating);
+
+        const savedRatings = JSON.parse(localStorage.getItem('ratings')) || {};
+        savedRatings[recipe.id] = newRating;
+        localStorage.setItem('ratings', JSON.stringify(savedRatings));
+    };
+
+    // Handle hover on stars
+    const handleMouseEnter = (ratings) => {
+        setHoveredRating(ratings);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredRating(0);
+    };
+
     return (
         <div className="recipe-card">
             <Link to={`/recipe/${recipe.id}`}>
                 <h3>{recipe.title}</h3>
                 <img src={recipe.image} alt={recipe.title} />
             </Link>
-            <button type="button" onClick={handleFavoriteClick} className={`favorite-button ${isFavorite ? 'active' : ''}`}>
+            <button
+                type="button"
+                onClick={handleFavoriteClick}
+                className={`favorite-button ${isFavorite ? 'active' : ''}`}
+            >
                 {isFavorite ? '★' : '☆'}
             </button>
+
             {onRemoveFromCollection ? (
                 <button type="button" onClick={() => onRemoveFromCollection(recipe)} className="remove-button">
                     Remove from Collection
@@ -111,6 +140,22 @@ function RecipeCard({
                     )}
                 </>
             )}
+
+            {/* Rating UI */}
+            <div className="rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                        type='button'
+                        key={star}
+                        className={`star ${rating >= star || hoveredRating >= star ? 'filled' : ''}`}
+                        onClick={() => handleRatingClick(star)}
+                        onMouseEnter={() => handleMouseEnter(star)}
+                        onMouseLeave={handleMouseLeave}
+                    >
+                        ★
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }

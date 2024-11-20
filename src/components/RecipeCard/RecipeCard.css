@@ -35,3 +35,25 @@
 .remove-button:hover {
     background-color: #d32f2f;
 } 
+
+.rating {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.star {
+  font-size: 24px;
+  color: #ccc;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.star:hover {
+  color: #ffeb3b;
+}
